@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>HackCafe — Practice Target</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0e0e12;
+    --surface: #16161c;
+    --card: #1c1c24;
+    --border: #2a2a38;
+    --border-lit: #3a3a52;
+    --neon: #7fff6e;
+    --blue: #5b9eff;
+    --pink: #ff6eb4;
+    --amber: #ffcc44;
+    --red: #ff5f5f;
+    --purple: #b48eff;
+    --text: #dde3f0;
+    --muted: #6b7280;
+    --dim: #22222e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ── TOP BANNER ── */
+  .top-banner {
+    background: linear-gradient(90deg, rgba(127,255,110,.12), rgba(91,158,255,.12));
+    border-bottom: 1px solid rgba(127,255,110,.25);
+    padding: 8px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem;
+    color: var(--neon);
+    display: flex; align-items: center; gap: 12px;
+    letter-spacing: 1px;
+  }
+  .banner-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); animation: blink 1.2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+  /* ── NAV ── */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 32px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 50;
+  }
+  .logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.05rem; font-weight: 700;
+    color: var(--neon);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .logo-tag {
+    font-size: .6rem; background: rgba(255,95,95,.15);
+    border: 1px solid var(--red); color: var(--red);
+    padding: 2px 7px; border-radius: 3px; letter-spacing: 1px;
+  }
+  .nav-right { display: flex; gap: 8px; flex-wrap: wrap; }
+  .nav-link {
+    font-size: .8rem; color: var(--muted);
+    background: transparent; border: 1px solid var(--border);
+    border-radius: 4px; padding: 6px 14px; cursor: pointer;
+    transition: all .2s; font-family: 'Space Grotesk', sans-serif;
+  }
+  .nav-link:hover { border-color: var(--blue); color: var(--blue); }
+  .nav-link.red { border-color: rgba(255,95,95,.4); color: var(--red); }
+  .nav-link.red:hover { border-color: var(--red); background: rgba(255,95,95,.07); }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 64px 32px 48px;
+    text-align: center;
+    background: radial-gradient(ellipse at 50% 0%, rgba(127,255,110,.05) 0%, transparent 65%);
+  }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem; letter-spacing: 3px;
+    color: var(--neon); margin-bottom: 16px; text-transform: uppercase;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    font-weight: 700; line-height: 1.1;
+    margin-bottom: 16px; letter-spacing: -1px;
+  }
+  .hero h1 em { font-style: normal; color: var(--neon); }
+  .hero-sub {
+    font-size: 1rem; color: var(--muted);
+    max-width: 500px; margin: 0 auto 36px; line-height: 1.7;
+  }
+  .hero-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    padding: 11px 26px; border-radius: 5px; font-weight: 600;
+    font-size: .88rem; cursor: pointer; border: none; transition: all .2s;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  .btn-green { background: var(--neon); color: #0e0e12; }
+  .btn-green:hover { box-shadow: 0 0 24px rgba(127,255,110,.4); transform: translateY(-1px); }
+  .btn-outline { background: transparent; border: 1px solid var(--border-lit); color: var(--text); }
+  .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+
+  /* ── VULNERABILITY MAP ── */
+  .vuln-map {
+    display: flex; gap: 6px; justify-content: center;
+    flex-wrap: wrap; padding: 0 32px 48px;
+  }
+  .vmap-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .65rem; padding: 5px 12px; border-radius: 4px;
+    letter-spacing: .5px; cursor: pointer; transition: all .2s;
+  }
+  .vmap-chip:hover { transform: scale(1.06); }
+
+  /* ── SECTION ── */
+  .section { padding: 0 32px 56px; }
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .68rem; letter-spacing: 3px; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ── SEARCH ── */
+  .search-box {
+    max-width: 540px; margin: 0 auto 10px;
+    display: flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+    transition: border-color .2s;
+  }
+  .search-box:focus-within { border-color: var(--pink); }
+  .search-box input {
+    flex: 1; background: var(--card); border: none; outline: none;
+    color: var(--text); padding: 13px 16px;
+    font-family: 'JetBrains Mono', monospace; font-size: .8rem;
+  }
+  .search-box input::placeholder { color: var(--muted); }
+  .search-box button {
+    padding: 13px 22px; background: var(--pink); border: none;
+    color: white; font-weight: 600; cursor: pointer; font-size: .8rem;
+    transition: background .2s; font-family: 'Space Grotesk', sans-serif;
+  }
+  .search-box button:hover { background: #e055a0; }
+  #searchResults {
+    max-width: 540px; margin: 0 auto;
+    font-family: 'JetBrains Mono', monospace; font-size: .8rem;
+    color: var(--muted); min-height: 22px; text-align: center; padding: 6px 0;
+  }
+  .vuln-hint {
+    max-width: 540px; margin: 0 auto 24px;
+    background: rgba(255,110,180,.06); border: 1px solid rgba(255,110,180,.2);
+    border-radius: 5px; padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: .7rem;
+    color: var(--pink); line-height: 1.7;
+  }
+
+  /* ── PRODUCTS ── */
+  .products {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px;
+  }
+  .pcard {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; overflow: hidden; cursor: pointer;
+    transition: all .25s;
+  }
+  .pcard:hover { border-color: var(--blue); transform: translateY(-3px); }
+  .pcard-img {
+    height: 110px; background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.4rem; border-bottom: 1px solid var(--border);
+  }
+  .pcard-body { padding: 12px; }
+  .pcard-name { font-weight: 600; font-size: .88rem; margin-bottom: 4px; }
+  .pcard-price { font-family: 'JetBrains Mono', monospace; font-size: .8rem; color: var(--neon); }
+
+  /* ── COMMENT SECTION (VULN 2 + 3) ── */
+  .comment-box {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px;
+  }
+  .comment-form { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+  .comment-form input {
+    flex: 1; min-width: 160px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 5px; padding: 10px 14px; color: var(--text); outline: none;
+    font-family: 'JetBrains Mono', monospace; font-size: .8rem;
+    transition: border-color .2s;
+  }
+  .comment-form input:focus { border-color: var(--neon); }
+  .comment-form button {
+    padding: 10px 20px; background: var(--neon); color: #0e0e12;
+    border: none; border-radius: 5px; font-weight: 700;
+    cursor: pointer; font-size: .83rem; transition: all .2s;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  .comment-form button:hover { box-shadow: 0 0 16px rgba(127,255,110,.35); }
+  .comment-list { display: flex; flex-direction: column; gap: 10px; }
+  .comment-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; padding: 12px 16px;
+  }
+  .comment-author {
+    font-family: 'JetBrains Mono', monospace; font-size: .72rem;
+    color: var(--blue); margin-bottom: 5px;
+  }
+  .comment-text { font-size: .88rem; color: var(--text); line-height: 1.6; }
+
+  /* ── ORDER LOOKUP ── */
+  .order-lookup {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px;
+  }
+  .order-lookup p {
+    font-size: .85rem; color: var(--muted); margin-bottom: 14px; line-height: 1.6;
+  }
+  .lookup-form { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+  .lookup-form input {
+    width: 120px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 5px; padding: 10px 14px; color: var(--text); outline: none;
+    font-family: 'JetBrains Mono', monospace; font-size: .8rem;
+    transition: border-color .2s;
+  }
+  .lookup-form input:focus { border-color: var(--amber); }
+  .lookup-form button {
+    padding: 10px 20px; background: var(--amber); color: #0e0e12;
+    border: none; border-radius: 5px; font-weight: 700;
+    cursor: pointer; font-size: .83rem;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  .order-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; padding: 14px; display: none;
+    font-family: 'JetBrains Mono', monospace; font-size: .78rem;
+  }
+  .order-card.show { display: block; }
+  .order-row { display: flex; justify-content: space-between; padding: 4px 0; }
+  .ok { color: var(--muted); }
+  .ov { color: var(--text); }
+  .ov.flag { color: var(--amber); font-weight: 700; }
+
+  /* ── SOURCE CODE VIEW ── */
+  .code-block {
+    background: #0a0a10; border: 1px solid var(--border); border-radius: 6px;
+    padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: .78rem;
+    line-height: 1.8; overflow-x: auto; margin: 12px 0;
+  }
+  .c-comment { color: var(--muted); }
+  .c-key { color: var(--blue); }
+  .c-val { color: var(--amber); }
+  .c-bad { color: var(--red); font-weight: 700; }
+  .c-good { color: var(--neon); }
+
+  /* ── ADMIN PANEL ── */
+  .admin-warning {
+    background: rgba(255,95,95,.07); border: 1px solid rgba(255,95,95,.3);
+    border-radius: 6px; padding: 12px 16px; margin-bottom: 16px;
+    font-family: 'JetBrains Mono', monospace; font-size: .72rem; color: var(--red);
+  }
+  .admin-table { width: 100%; border-collapse: collapse; font-family: 'JetBrains Mono', monospace; font-size: .73rem; }
+  .admin-table th { padding: 8px 12px; text-align: left; color: var(--muted); border-bottom: 1px solid var(--border); }
+  .admin-table td { padding: 7px 12px; border-bottom: 1px solid var(--dim); }
+  .role-admin { color: var(--red); }
+  .role-user { color: var(--neon); }
+
+  /* ── OVERLAYS ── */
+  .overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,.8); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center;
+  }
+  .overlay.open { display: flex; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border-lit);
+    border-radius: 10px; padding: 32px 36px;
+    width: 460px; max-width: 95vw; position: relative;
+  }
+  .modal h2 { font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; }
+  .modal-sub { font-size: .78rem; color: var(--muted); margin-bottom: 22px; }
+  .modal .close {
+    position: absolute; top: 14px; right: 16px;
+    background: none; border: none; color: var(--muted);
+    font-size: 1.1rem; cursor: pointer;
+  }
+  .modal .close:hover { color: var(--red); }
+  .mfield { margin-bottom: 14px; }
+  .mfield label {
+    display: block; font-size: .75rem; color: var(--muted);
+    margin-bottom: 6px; font-family: 'JetBrains Mono', monospace;
+  }
+  .mfield input {
+    width: 100%; padding: 10px 14px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 5px; color: var(--text); outline: none;
+    font-family: 'JetBrains Mono', monospace; font-size: .82rem;
+    transition: border-color .2s;
+  }
+  .mfield input:focus { border-color: var(--blue); }
+  .mbtn {
+    width: 100%; padding: 11px; border: none; border-radius: 5px;
+    font-weight: 700; font-size: .88rem; cursor: pointer;
+    font-family: 'Space Grotesk', sans-serif; transition: all .2s;
+  }
+  .mbtn-blue { background: var(--blue); color: white; }
+  .mbtn-blue:hover { box-shadow: 0 0 18px rgba(91,158,255,.4); }
+  .mmsg { margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: .78rem; min-height: 18px; }
+  .mmsg.ok { color: var(--neon); }
+  .mmsg.err { color: var(--red); }
+  .mmsg.warn { color: var(--amber); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border); padding: 20px 32px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: .75rem; color: var(--muted);
+  }
+  /* ── VULN LABEL BADGES ── */
+  .vb {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: .58rem; padding: 2px 7px; border-radius: 3px;
+    margin-left: 6px; letter-spacing: .5px; vertical-align: middle;
+  }
+  .vb-pink { background: rgba(255,110,180,.12); border: 1px solid rgba(255,110,180,.35); color: var(--pink); }
+  .vb-amber { background: rgba(255,204,68,.1); border: 1px solid rgba(255,204,68,.3); color: var(--amber); }
+  .vb-blue { background: rgba(91,158,255,.1); border: 1px solid rgba(91,158,255,.3); color: var(--blue); }
+  .vb-red { background: rgba(255,95,95,.1); border: 1px solid rgba(255,95,95,.3); color: var(--red); }
+  .vb-neon { background: rgba(127,255,110,.08); border: 1px solid rgba(127,255,110,.25); color: var(--neon); }
+  .vb-purple { background: rgba(180,142,255,.1); border: 1px solid rgba(180,142,255,.3); color: var(--purple); }
+
+  @media(max-width:580px){
+    nav { padding: 12px 16px; }
+    .hero { padding: 40px 16px 32px; }
+    .section { padding: 0 16px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  VULN #4 — SENSITIVE DATA IN HTML COMMENTS       ║ -->
+<!-- ║  Right-click → View Page Source to find these    ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+
+<!-- TODO: remove creds before going live -->
+<!-- admin login: admin / letmein -->
+<!-- staging db password: db_pass_1234 -->
+<!-- stripe test key: sk_test_ABCDEF123456 -->
+
+<div class="top-banner">
+  <div class="banner-dot"></div>
+  HACKCAFE CTF LAB &nbsp;// &nbsp;DELIBERATELY VULNERABLE &nbsp;// &nbsp;EDUCATIONAL USE ONLY
+</div>
+
+<nav>
+  <div class="logo">
+    ☕ HackCafe
+    <span class="logo-tag">VULN LAB</span>
+  </div>
+  <div class="nav-right">
+    <button class="nav-link" onclick="openLogin()">Login <span class="vb vb-amber">#2 #5</span></button>
+    <button class="nav-link" onclick="document.getElementById('orderSection').scrollIntoView({behavior:'smooth'})">Orders <span class="vb vb-blue">#3</span></button>
+    <!-- VULN #7: admin accessible without login -->
+    <button class="nav-link red" onclick="openAdmin()">Admin Panel <span class="vb vb-red">NO AUTH</span></button>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-eyebrow">// beginner ctf practice lab</div>
+  <h1>Welcome to<br/><em>HackCafe</em> ☕</h1>
+  <p class="hero-sub">
+    A fake coffee shop website with 7 real security flaws hidden inside.
+    Your job is to find and understand each one.
+  </p>
+  <div class="hero-btns">
+    <button class="btn btn-green" onclick="openLogin()">Start Hacking</button>
+    <button class="btn btn-outline" onclick="document.getElementById('searchSection').scrollIntoView({behavior:'smooth'})">Explore the Site</button>
+  </div>
+</section>
+
+<!-- VULN MAP CHIPS -->
+<div class="vuln-map">
+  <span class="vmap-chip" style="background:rgba(255,110,180,.1);border:1px solid rgba(255,110,180,.3);color:var(--pink)" onclick="document.getElementById('searchSection').scrollIntoView({behavior:'smooth'})">VULN#1 — XSS</span>
+  <span class="vmap-chip" style="background:rgba(255,204,68,.1);border:1px solid rgba(255,204,68,.3);color:var(--amber)" onclick="openLogin()">VULN#2 — SQLi</span>
+  <span class="vmap-chip" style="background:rgba(91,158,255,.1);border:1px solid rgba(91,158,255,.3);color:var(--blue)" onclick="document.getElementById('orderSection').scrollIntoView({behavior:'smooth'})">VULN#3 — IDOR</span>
+  <span class="vmap-chip" style="background:rgba(180,142,255,.1);border:1px solid rgba(180,142,255,.3);color:var(--purple)">VULN#4 — DATA LEAK</span>
+  <span class="vmap-chip" style="background:rgba(127,255,110,.08);border:1px solid rgba(127,255,110,.25);color:var(--neon)" onclick="openLogin()">VULN#5 — WEAK CREDS</span>
+  <span class="vmap-chip" style="background:rgba(255,204,68,.1);border:1px solid rgba(255,204,68,.3);color:var(--amber)" onclick="document.getElementById('commentSection').scrollIntoView({behavior:'smooth'})">VULN#6 — STORED XSS</span>
+  <span class="vmap-chip" style="background:rgba(255,95,95,.1);border:1px solid rgba(255,95,95,.3);color:var(--red)" onclick="openAdmin()">VULN#7 — OPEN ADMIN</span>
+</div>
+
+<!-- ══════════════════════════════════ VULN #1: REFLECTED XSS ══ -->
+<section class="section" id="searchSection">
+  <div class="section-label">Menu Search <span class="vb vb-pink">VULN #1 — Reflected XSS</span></div>
+
+  <div class="vuln-hint">
+    💡 Hint: What happens if you type HTML into this search box instead of a coffee name?
+    Try: <strong>&lt;b&gt;hello&lt;/b&gt;</strong> — does it make text bold? What else could you inject?
+  </div>
+
+  <!-- VULN #1: search query dumped into innerHTML with no sanitization -->
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder='Search menu (e.g. "Latte" or try an HTML tag)'/>
+    <button onclick="doSearch()">Search</button>
+  </div>
+  <div id="searchResults"></div>
+</section>
+
+<!-- ══════════════════════════════════ PRODUCTS ══ -->
+<section class="section">
+  <div class="section-label">Our Menu</div>
+  <div class="products">
+    <div class="pcard"><div class="pcard-img">☕</div><div class="pcard-body"><div class="pcard-name">House Latte</div><div class="pcard-price">$4.50</div></div></div>
+    <div class="pcard"><div class="pcard-img">🍵</div><div class="pcard-body"><div class="pcard-name">Matcha Latte</div><div class="pcard-price">$5.00</div></div></div>
+    <div class="pcard"><div class="pcard-img">🧋</div><div class="pcard-body"><div class="pcard-name">Bubble Tea</div><div class="pcard-price">$5.50</div></div></div>
+    <div class="pcard"><div class="pcard-img">🍰</div><div class="pcard-body"><div class="pcard-name">Cheesecake</div><div class="pcard-price">$6.00</div></div></div>
+    <div class="pcard"><div class="pcard-img">🥐</div><div class="pcard-body"><div class="pcard-name">Croissant</div><div class="pcard-price">$3.50</div></div></div>
+    <div class="pcard"><div class="pcard-img">🍫</div><div class="pcard-body"><div class="pcard-name">Hot Chocolate</div><div class="pcard-price">$4.00</div></div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════ VULN #3: IDOR ══ -->
+<section class="section" id="orderSection">
+  <div class="section-label">Order Lookup <span class="vb vb-blue">VULN #3 — IDOR</span></div>
+  <div class="order-lookup">
+    <p>
+      Enter your order number below to check the status of your order.
+      <br/>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);">
+        💡 Hint: Your order number is 3. But what if you tried other numbers like 1, 2, 4, or 5?
+      </span>
+    </p>
+    <div class="lookup-form">
+      <!-- VULN #3: IDOR — no check that the requester owns this order -->
+      <input type="number" id="orderId" value="3" min="1" max="10"/>
+      <button onclick="lookupOrder()">Look Up</button>
+    </div>
+    <div class="order-card" id="orderCard"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════ VULN #6: STORED XSS ══ -->
+<section class="section" id="commentSection">
+  <div class="section-label">Customer Reviews <span class="vb vb-amber">VULN #6 — Stored XSS</span></div>
+  <div class="comment-box">
+    <div class="vuln-hint" style="margin-bottom:14px;">
+      💡 Hint: This comment box saves what you type and shows it to everyone. What if your "name" or "comment" contained an HTML tag?
+      Try putting <strong>&lt;b&gt;your name&lt;/b&gt;</strong> in the Name field. Then try something more interesting.
+    </div>
+    <!-- VULN #6: Stored XSS — both fields are injected as innerHTML -->
+    <div class="comment-form">
+      <input type="text" id="commentName" placeholder="Your name"/>
+      <input type="text" id="commentText" placeholder="Write a review..."/>
+      <button onclick="postComment()">Post</button>
+    </div>
+    <div class="comment-list" id="commentList"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════ SOURCE CODE VIEWER ══ -->
+<section class="section">
+  <div class="section-label">Page Source Viewer <span class="vb vb-purple">VULN #4 hint</span></div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px;">
+    <p style="font-size:.85rem;color:var(--muted);margin-bottom:14px;line-height:1.6;">
+      Real developers sometimes leave notes and passwords in the HTML source code by accident.
+      Press <strong style="color:var(--text)">Ctrl+U</strong> (or Cmd+U on Mac) in your browser to view the raw HTML of this page,
+      then search for <strong style="color:var(--amber)">&lt;!--</strong> to find hidden comments.
+    </p>
+    <div class="code-block">
+<span class="c-comment">&lt;!-- This is an HTML comment — invisible on the page but visible in source --&gt;</span><br/>
+<span class="c-comment">&lt;!-- Developers sometimes leave sensitive info here by mistake... --&gt;</span><br/>
+<span class="c-bad">&lt;!-- TODO: remove creds before going live --&gt;</span><br/>
+<span class="c-bad">&lt;!-- admin login: ??? / ??????? --&gt;</span>
+    </div>
+    <p style="font-size:.78rem;color:var(--muted);font-family:'JetBrains Mono',monospace;">
+      💡 View the actual source of this page to see the real values.
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════ LOGIN MODAL — VULN #2 + #5 ══ -->
+<div class="overlay" id="loginOverlay">
+  <div class="modal">
+    <button class="close" onclick="closeLogin()">✕</button>
+    <h2 style="color:var(--blue)">Staff Login</h2>
+    <div class="modal-sub">
+      Vulnerabilities here: <span style="color:var(--amber)">#2 SQL Injection</span> &amp; <span style="color:var(--neon)">#5 Weak Credentials</span>
+    </div>
+
+    <div style="background:rgba(255,204,68,.06);border:1px solid rgba(255,204,68,.2);border-radius:5px;padding:10px 14px;margin-bottom:16px;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--amber);">
+      💡 Hint #2 (SQLi): Try typing &nbsp;<strong>admin' --</strong>&nbsp; as the username (leave password blank)<br/>
+      💡 Hint #5 (Weak): Try &nbsp;<strong>admin</strong>&nbsp; /&nbsp; <strong>letmein</strong>&nbsp; as credentials
+    </div>
+
+    <div class="mfield">
+      <label>Username</label>
+      <!-- VULN #2: SQL injection — not sanitized -->
+      <input type="text" id="loginUser" placeholder="admin' --  OR  admin"/>
+    </div>
+    <div class="mfield">
+      <label>Password</label>
+      <!-- VULN #5: hardcoded weak credentials -->
+      <input type="password" id="loginPass" placeholder="try: letmein"/>
+    </div>
+    <button class="mbtn mbtn-blue" onclick="doLogin()">Sign In</button>
+    <div class="mmsg" id="loginMsg"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════ ADMIN MODAL — VULN #7 ══ -->
+<div class="overlay" id="adminOverlay">
+  <div class="modal" style="width:620px;border-color:var(--red);">
+    <button class="close" onclick="closeAdmin()">✕</button>
+    <h2 style="color:var(--red)">⚠ Admin Panel</h2>
+    <div class="modal-sub">VULN #7 — This panel has no login check. Anyone can open it.</div>
+    <div class="admin-warning">
+      You reached this page without logging in. In a real app, this would let an attacker
+      read all user data, change passwords, or take over accounts.
+    </div>
+    <table class="admin-table">
+      <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Password (plain!)</th><th>Role</th></tr></thead>
+      <tbody id="adminBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<footer>
+  <div>HackCafe CTF — Educational use only. Do not deploy publicly.</div>
+  <!-- VULN #4 continued — more leaked data in footer comment -->
+  <!-- internal API: https://api.hackcafe.internal/v1 -->
+  <!-- api_key: hc_api_key_9f3k2m -->
+  <div style="font-family:'JetBrains Mono',monospace;font-size:.68rem;">v1.0.0 — VULN LAB BUILD</div>
+</footer>
+
+<script>
+// ════════════════════════════ FAKE DATABASE ════════════════════════════
+const users = [
+  { id:1, username:'admin',  email:'admin@hackcafe.com',  password:'letmein',  role:'admin'  },
+  { id:2, username:'alice',  email:'alice@example.com',   password:'password', role:'user'   },
+  { id:3, username:'bob',    email:'bob@example.com',     password:'123456',   role:'user'   },
+  { id:4, username:'sarah',  email:'sarah@example.com',   password:'qwerty',   role:'user'   },
+];
+
+const orders = [
+  { id:1, user:'alice', email:'alice@example.com', item:'House Latte x2',  total:'$9.00',  status:'Ready',      note:'Extra oat milk'    },
+  { id:2, user:'bob',   email:'bob@example.com',   item:'Cheesecake',       total:'$6.00',  status:'Preparing',  note:'Birthday candle!'  },
+  { id:3, user:'sarah', email:'sarah@example.com', item:'Bubble Tea',       total:'$5.50',  status:'Delivered',  note:''                  },
+  { id:4, user:'admin', email:'admin@hackcafe.com',item:'Staff order',      total:'$0.00',  status:'Internal',   note:'Admin account'     },
+  { id:5, user:'alice', email:'alice@example.com', item:'Matcha Latte',     total:'$5.00',  status:'Ready',      note:'Iced please'       },
+];
+
+// Seed some initial comments
+const comments = [
+  { name:'Maria',  text:'Love the matcha latte here! ☕' },
+  { name:'Dev',    text:'Great spot for working remotely.' },
+];
+renderComments();
+
+// ════════ VULN #1: Reflected XSS — innerHTML with raw user input ════════
+function doSearch() {
+  const q = document.getElementById('searchInput').value;
+  // ❌ VULNERABLE: user input goes straight into innerHTML
+  document.getElementById('searchResults').innerHTML =
+    q ? `<span style="color:var(--muted)">Search results for:</span> <strong style="color:var(--pink)">${q}</strong>` : '';
+}
+
+// ════════ VULN #2: SQL Injection (simulated) + VULN #5: Weak Creds ═══════
+function doLogin() {
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value.trim();
+  const msg  = document.getElementById('loginMsg');
+  // Simulated SQLi bypass — real backend would run:
+  //   SELECT * FROM users WHERE username='<user>' AND password='<pass>'
+  // admin' --  makes it: WHERE username='admin' --' AND password=''
+  //                                               ↑ rest is a comment → password ignored
+  const sqli = user.includes("' --") || user.includes("' OR") || user.includes("'--");
+  const match = users.find(u => u.username === user && u.password === pass);
+  if (sqli || match) {
+    const who = sqli ? users[0] : match;
+    msg.className = 'mmsg ok';
+    msg.innerHTML = `✓ Logged in as <strong>${who.username}</strong> (${who.role})${sqli ? ' — via SQL injection bypass!' : ''}`;
+  } else {
+    msg.className = 'mmsg err';
+    msg.textContent = '✗ Wrong username or password';
+  }
+}
+
+// ════════ VULN #3: IDOR — no ownership check ═════════════════════════════
+function lookupOrder() {
+  const id = parseInt(document.getElementById('orderId').value);
+  const order = orders.find(o => o.id === id);
+  const el = document.getElementById('orderCard');
+  if (!order) {
+    el.className = 'order-card show';
+    el.innerHTML = `<span style="color:var(--red)">No order found with ID ${id}.</span>`;
+    return;
+  }
+  // ❌ VULNERABLE: returns ANY order, no check that the current user owns it
+  el.className = 'order-card show';
+  el.innerHTML = `
+    <div class="order-row"><span class="ok">Order ID</span><span class="ov">#${order.id}</span></div>
+    <div class="order-row"><span class="ok">Customer</span><span class="ov flag">${order.user}</span></div>
+    <div class="order-row"><span class="ok">Email</span><span class="ov flag">${order.email}</span></div>
+    <div class="order-row"><span class="ok">Item</span><span class="ov">${order.item}</span></div>
+    <div class="order-row"><span class="ok">Total</span><span class="ov">${order.total}</span></div>
+    <div class="order-row"><span class="ok">Status</span><span class="ov">${order.status}</span></div>
+    ${order.note ? `<div class="order-row"><span class="ok">Note</span><span class="ov">${order.note}</span></div>` : ''}
+  `;
+}
+
+// ════════ VULN #6: Stored XSS — comment is saved and re-rendered as HTML ═
+function postComment() {
+  const name = document.getElementById('commentName').value.trim();
+  const text = document.getElementById('commentText').value.trim();
+  if (!name || !text) return;
+  // ❌ VULNERABLE: input stored and rendered as innerHTML — persists for all visitors
+  comments.push({ name, text });
+  renderComments();
+  document.getElementById('commentName').value = '';
+  document.getElementById('commentText').value = '';
+}
+function renderComments() {
+  // ❌ VULNERABLE: .innerHTML — any HTML/JS in name or text will execute
+  document.getElementById('commentList').innerHTML = comments.map(c => `
+    <div class="comment-item">
+      <div class="comment-author">${c.name}</div>
+      <div class="comment-text">${c.text}</div>
+    </div>
+  `).join('');
+}
+
+// ════════ VULN #7: Admin Panel — zero auth ═══════════════════════════════
+function openAdmin() {
+  // ❌ VULNERABLE: no login check whatsoever
+  document.getElementById('adminBody').innerHTML = users.map(u => `
+    <tr>
+      <td>${u.id}</td>
+      <td style="color:var(--blue)">${u.username}</td>
+      <td style="color:var(--muted)">${u.email}</td>
+      <td style="color:var(--red);font-weight:700">${u.password}</td>
+      <td class="role-${u.role}">${u.role}</td>
+    </tr>
+  `).join('');
+  document.getElementById('adminOverlay').classList.add('open');
+}
+
+// ── Modal helpers ──────────────────────────────────────────────────────
+function openLogin()  { document.getElementById('loginOverlay').classList.add('open'); }
+function closeLogin() { document.getElementById('loginOverlay').classList.remove('open'); }
+function closeAdmin() { document.getElementById('adminOverlay').classList.remove('open'); }
+['loginOverlay','adminOverlay'].forEach(id => {
+  document.getElementById(id).addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+});
+</script>
+</body>
+</html>
